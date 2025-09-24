@@ -2,7 +2,7 @@
 
 **TabHQ** is a modular backend service for managing applications, users, and payments across multiple providers. It is designed to be extensible, secure, and developer-friendly, making it easier to integrate different payment solutions (e.g., Flutterwave, PayPal, Mobile Money) into your apps.
 
-## ✨ Features
+## Features
 
 -  **Authentication & Invites** – Manage users and invitations with JWT-based authentication
 -  **Apps Management** – Create and configure apps linked to your workspace
@@ -11,13 +11,13 @@
 -  **Secure by default** – Helmet, CORS, and signature verification for webhooks
 -  **Extensible Provider System** – Add new providers by extending a simple `BaseProvider` class
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Node.js + TypeScript** – Core backend framework
 - **Express** – REST API
 - **Winston** – Structured logging
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -58,7 +58,7 @@ PORT=3000
 JWT_SECRET=your_jwt_secret
 ```
 
-## 📡 API Overview
+## API Overview
 
 ### Authentication
 - `POST /auth/login` – User login
@@ -95,14 +95,3 @@ Example request to create a Flutterwave Mobile Money payment:
   }
 }
 ```
-
-## 📜 License
-
-MIT License.
-
-## 🤝 Contributing
-
-Contributions are welcome!
-
-- Open an issue for bug reports or feature requests
-- Fork the repo and submit a PR for fixes and improvements
