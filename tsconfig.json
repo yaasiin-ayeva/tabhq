@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2021",                        // syntaxe moderne
+    "module": "CommonJS",                      // compatible Node.js
+    "moduleResolution": "node",
+    "outDir": "dist",                          // build JS
+    "rootDir": "src",                          // sources TS
+    "strict": true,                            // active toutes les vérifs strictes
+    "strictPropertyInitialization": false,     // utile avec TypeORM
+    "esModuleInterop": true,                   // import express, cors, etc.
+    "skipLibCheck": true,                      // évite les erreurs dans @types
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,                 // import JSON possible
+    "experimentalDecorators": true,            // TypeORM + decorators
+    "emitDecoratorMetadata": true,             // TypeORM reflection
+    "types": ["node", "express"]               // types globaux
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "tests"]
+}
