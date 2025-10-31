@@ -3,7 +3,7 @@ module.exports = {
         // Backend Application
         {
             name: 'tabhq-backend',
-            script: './backend/src/server.ts',
+            script: 'src/server.ts',
             cwd: './backend',
             interpreter: 'node',
             interpreter_args: '--require ts-node/register',
@@ -28,8 +28,8 @@ module.exports = {
         // Backend Development Mode (with auto-reload)
         {
             name: 'tabhq-backend-dev',
-            script: './backend/node_modules/.bin/ts-node-dev',
-            args: '--respawn --transpile-only ./backend/src/server.ts',
+            script: 'npm',
+            args: 'run dev',
             cwd: './backend',
             instances: 1,
             exec_mode: 'fork',
@@ -49,7 +49,7 @@ module.exports = {
         // Backend Production Mode (built version)
         {
             name: 'tabhq-backend-prod',
-            script: './backend/dist/server.js',
+            script: 'dist/server.js',
             cwd: './backend',
             instances: 'max', // Use all CPU cores
             exec_mode: 'cluster',
@@ -71,7 +71,8 @@ module.exports = {
         // Frontend Development Mode (Vite dev server)
         {
             name: 'tabhq-frontend-dev',
-            script: './frontend/node_modules/.bin/vite',
+            script: 'npm',
+            args: 'run dev',
             cwd: './frontend',
             instances: 1,
             exec_mode: 'fork',
