@@ -54,7 +54,7 @@ export class App {
             id: this.id,
             name: this.name,
             description: this.description,
-            webhookUrl: this.webhookUrl,
+            // webhookUrl: this.webhookUrl,
             environment: this.environment,
             organization: this.organization,
             apiKey: this.apiKey?.safe(),

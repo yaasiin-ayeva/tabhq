@@ -12,8 +12,8 @@ export class CreateAppDto {
     description?: string;
 
     // @IsOptional()
-    @IsUrl({}, { message: "webhookUrl must be a valid URL" })
-    webhookUrl?: string;
+    // @IsUrl({}, { message: "webhookUrl must be a valid URL" })
+    // webhookUrl?: string;
 
     // @IsOptional()
     @IsString()

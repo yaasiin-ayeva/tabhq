@@ -78,7 +78,7 @@ router.post("/", async (req: Request, res: Response) => {
                     }
                 );
 
-                console.log(`📢 Notified app ${payment.app.id} at ${credentials.callbackUrl}`);
+                console.log(`Notified app ${payment.app.id} at ${credentials.callbackUrl}`);
             } catch (notifyErr: any) {
                 console.error("Failed to notify app callback:", notifyErr.message);
             }

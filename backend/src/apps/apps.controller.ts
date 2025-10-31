@@ -20,7 +20,7 @@ router.post("/",
         console.log("create app body", req.body);
 
         try {
-            const { name, description, webhookUrl, environment } = req.body;
+            const { name, description, environment } = req.body;
             const orgId = req.organizationId!;
 
             console.log("orgId", orgId);
@@ -29,7 +29,7 @@ router.post("/",
                 throw new Error("Invalid environment");
             }
 
-            const { app, apiKey } = await appsService.createApp(orgId, name, environment, description, webhookUrl);
+            const { app, apiKey } = await appsService.createApp(orgId, name, environment, description);
             res.status(201).json({
                 message: "App created successfully",
                 data: {

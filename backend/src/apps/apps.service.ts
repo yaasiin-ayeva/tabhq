@@ -18,7 +18,7 @@ export class AppsService {
         name: string,
         environment: AppEnvironment,
         description?: string,
-        webhookUrl?: string
+        // webhookUrl?: string
     ) {
         const orgRepo = AppDataSource.getRepository(Organization);
         const appRepo = AppDataSource.getRepository(App);
@@ -30,7 +30,7 @@ export class AppsService {
         const app = appRepo.create({
             name,
             description,
-            webhookUrl,
+            // webhookUrl,
             environment,
             organization: org,
         });

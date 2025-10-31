@@ -13,7 +13,7 @@ export type AppItem = {
     id: string;
     name: string;
     description?: string;
-    webhookUrl?: string;
+    // webhookUrl?: string;
     environment: AppEnvironment;
     apiKey?: AppApiKey;
     createdAt: string;

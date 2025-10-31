@@ -3,7 +3,10 @@ import { api } from './api';
 export type ProviderCredentials = {
     secretKey?: string;
     publicKey?: string;
-    webhookSecret?: string;
+    secretHash?: string;
+    callbackUrl?: string;
+    apiUser?: string;
+    apiKey?: string;
     [key: string]: any;
 };
 
@@ -18,6 +21,7 @@ export type ProviderConfig = {
 
 export const providersApi = api.injectEndpoints({
     endpoints: (build) => ({
+        // Récupérer tous les providers pour une app
         getProviders: build.query<ProviderConfig[], { appId: string }>({
             query: ({ appId }) => ({ url: `/payment-config/${appId}/providers` }),
             transformResponse: (res: any) => res?.data ?? res,
@@ -29,27 +33,21 @@ export const providersApi = api.injectEndpoints({
                     ]
                     : [{ type: 'Providers' as const, id: `LIST-${appId}` }]
         }),
-        updateProviderConfig: build.mutation<ProviderConfig, {
-            appId: string;
-            providerId: string;
-            active: boolean;
-            credentials?: ProviderCredentials
-        }>({
-            query: ({ appId, providerId, active, credentials }) => ({
-                url: `/payment-config/${appId}/providers/${providerId}`,
-                method: 'PUT',
-                body: { active, credentials }
-            }),
+
+        // Récupérer un provider spécifique
+        getProvider: build.query<ProviderConfig, { appId: string; provider: string }>({
+            query: ({ appId, provider }) => ({ url: `/payment-config/${appId}/providers/${provider}` }),
             transformResponse: (res: any) => res?.data ?? res,
-            invalidatesTags: (_result, _error, { appId, providerId }) => [
-                { type: 'Providers', id: `${appId}-${providerId}` },
-                { type: 'Providers', id: `LIST-${appId}` }
+            providesTags: (_result, _error, { appId, provider }) => [
+                { type: 'Providers', id: `${appId}-${provider}` }
             ],
         }),
+
+        // Créer ou mettre à jour une configuration de provider
         setProviderConfig: build.mutation<ProviderConfig, {
             appId: string;
             provider: string;
-            credentials: ProviderCredentials
+            credentials: ProviderCredentials;
         }>({
             query: ({ appId, provider, credentials }) => ({
                 url: `/payment-config/${appId}/providers`,
@@ -57,8 +55,43 @@ export const providersApi = api.injectEndpoints({
                 body: { provider, credentials }
             }),
             transformResponse: (res: any) => res?.data ?? res,
-            invalidatesTags: (_result, _error, { appId }) => [
-                { type: 'Providers', id: `LIST-${appId}` }
+            invalidatesTags: (_result, _error, { appId, provider }) => [
+                { type: 'Providers', id: `LIST-${appId}` },
+                { type: 'Providers', id: `${appId}-${provider}` }
+            ],
+        }),
+
+        // Mettre à jour une configuration existante
+        updateProviderConfig: build.mutation<ProviderConfig, {
+            appId: string;
+            provider: string;
+            credentials: ProviderCredentials;
+        }>({
+            query: ({ appId, provider, credentials }) => ({
+                url: `/payment-config/${appId}/providers/${provider}`,
+                method: 'PUT',
+                body: { provider, credentials }
+            }),
+            transformResponse: (res: any) => res?.data ?? res,
+            invalidatesTags: (_result, _error, { appId, provider }) => [
+                { type: 'Providers', id: `LIST-${appId}` },
+                { type: 'Providers', id: `${appId}-${provider}` }
+            ],
+        }),
+
+        // Désactiver un provider
+        deactivateProvider: build.mutation<ProviderConfig, {
+            appId: string;
+            provider: string;
+        }>({
+            query: ({ appId, provider }) => ({
+                url: `/payment-config/${appId}/providers/${provider}/deactivate`,
+                method: 'PATCH',
+            }),
+            transformResponse: (res: any) => res?.data ?? res,
+            invalidatesTags: (_result, _error, { appId, provider }) => [
+                { type: 'Providers', id: `LIST-${appId}` },
+                { type: 'Providers', id: `${appId}-${provider}` }
             ],
         }),
     }),
@@ -66,6 +99,8 @@ export const providersApi = api.injectEndpoints({
 
 export const {
     useGetProvidersQuery,
+    useGetProviderQuery,
+    useSetProviderConfigMutation,
     useUpdateProviderConfigMutation,
-    useSetProviderConfigMutation
+    useDeactivateProviderMutation
 } = providersApi;

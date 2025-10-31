@@ -31,11 +31,11 @@ const AppCard = ({ app, onRotate, rotating, onCopy }: { app: any; onRotate: (id:
                                 <button className="btn btn-xs btn-outline-secondary" onClick={() => onCopy(app.apiKey.key)}>Copy</button>
                             </div>
                         )}
-                        {app.webhookUrl && (
+                        {/* {app.webhookUrl && (
                             <div className="small text-muted mb-2 text-truncate" title={app.webhookUrl}>
                                 Webhook: {app.webhookUrl}
                             </div>
-                        )}
+                        )} */}
                         <div className="d-flex gap-2">
                             <Link
                                 to={`/apps/${app.id}/providers`}
@@ -58,7 +58,7 @@ const AppCard = ({ app, onRotate, rotating, onCopy }: { app: any; onRotate: (id:
 const CreateAppModal = ({ show, onClose, onCreate }: { show: boolean; onClose: () => void; onCreate: (payload: any) => void }) => {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
-    const [webhookUrl, setWebhookUrl] = useState("");
+    // const [webhookUrl, setWebhookUrl] = useState("");
     const [environment, setEnvironment] = useState<AppEnvironment>("development");
 
     if (!show) return null;
@@ -80,10 +80,10 @@ const CreateAppModal = ({ show, onClose, onCreate }: { show: boolean; onClose: (
                             <label className="form-label">Description</label>
                             <textarea className="form-control" rows={3} value={description} onChange={(e) => setDescription(e.target.value)} />
                         </div>
-                        <div className="mb-3">
+                        {/* <div className="mb-3">
                             <label className="form-label">Webhook URL</label>
                             <input className="form-control" value={webhookUrl} onChange={(e) => setWebhookUrl(e.target.value)} />
-                        </div>
+                        </div> */}
                         <div className="mb-3">
                             <label className="form-label">Environment</label>
                             <select className="form-select" value={environment} onChange={(e) => setEnvironment(e.target.value as AppEnvironment)}>
@@ -95,7 +95,7 @@ const CreateAppModal = ({ show, onClose, onCreate }: { show: boolean; onClose: (
                     </div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-outline-secondary" onClick={onClose}>Cancel</button>
-                        <button type="button" className="btn btn-primary" onClick={() => onCreate({ name, description, webhookUrl, environment })}>Create</button>
+                        <button type="button" className="btn btn-primary" onClick={() => onCreate({ name, description, environment })}>Create</button>
                     </div>
                 </div>
             </div>

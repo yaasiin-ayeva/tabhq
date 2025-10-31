@@ -3,7 +3,7 @@ import { getUserInfo } from "./localstorage";
 export const displayName = () => {
     const user = getUserInfo();
     console.log("user", user);
-    
+
     if (!user) return '';
     const full = `${user.firstname ?? ''} ${user.lastname ?? ''}`.trim();
     return full || user.email || '';
@@ -16,11 +16,11 @@ const getGreetingMessage = (name = displayName()) => {
     let greeting;
 
     if (currentHour >= 5 && currentHour < 12) {
-        greeting = 'Good morning 😎';
+        greeting = 'Good morning ';
     } else if (currentHour >= 12 && currentHour < 18) {
-        greeting = 'Good afternoon 🌤️';
+        greeting = 'Good afternoon ';
     } else {
-        greeting = 'Good evening 🌙';
+        greeting = 'Good evening ';
     }
 
     return `Hello ${name}, ${greeting}`;
