@@ -72,7 +72,7 @@ module.exports = {
         {
             name: 'tabhq-frontend-dev',
             script: 'npm',
-            args: 'run dev',
+            args: 'run dev:host',
             cwd: './frontend',
             instances: 1,
             exec_mode: 'fork',
