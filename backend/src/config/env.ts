@@ -22,5 +22,8 @@ export const ENV = {
     JWT: {
         SECRET: process.env.JWT_SECRET || "defaultsecret",
         EXPIRES_IN: process.env.JWT_EXPIRES_IN || "1h",
+        API_KEY_SECRET: process.env.JWT_API_KEY_SECRET || "defaultsecret",
     },
+
+
 };

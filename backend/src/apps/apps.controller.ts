@@ -70,7 +70,7 @@ router.post("/:appId/keys/rotate",
             const app = await appsService.getAppById(appId, orgId);
             if (!app) throw new Error("App not found");
 
-            const apiKey = await appsService.generateApiKey(app);
+            const apiKey = await appsService.generateApiKey(app, orgId);
 
             res.status(201).json({
                 message: "API key rotated successfully",
@@ -85,7 +85,6 @@ router.post("/:appId/keys/rotate",
     }
 );
 
-// Get a single app by ID with it's providers weither added or not
 router.get(
     "/:appId",
     jwtAuth,

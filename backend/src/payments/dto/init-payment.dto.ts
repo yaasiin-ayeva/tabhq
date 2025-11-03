@@ -1,5 +1,3 @@
-// src/payments/dto/init-payment.dto.ts
-
 import { IsString, IsNotEmpty, IsNumber, IsPositive, IsOptional, IsObject } from "class-validator";
 
 export class InitPaymentDto {

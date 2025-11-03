@@ -1,3 +1,5 @@
+// backend/src/apps/apps.service.ts
+
 import { AppDataSource } from "../config/db";
 import { App } from "./app.entity";
 import { AppApiKey } from "./appApiKey.entity";
@@ -6,7 +8,8 @@ import { AuditAction, AppEnvironment } from "../common/enums";
 import { Organization } from "../auth/organization.entity";
 import { ProviderConfig } from "../payment-config/provider-config.entity";
 import { getAllProviderNames } from "../payments/providers/registry";
-import { randomBytes } from "crypto";
+import { createHmac, randomBytes } from "crypto";
+import { ENV } from "../config/env";
 
 export class AppsService {
     private appRepo = AppDataSource.getRepository(App);
@@ -37,8 +40,7 @@ export class AppsService {
 
         await appRepo.save(app);
 
-        // Generate and associate the API key
-        const apiKey = await this.generateApiKey(app);
+        const apiKey = await this.generateApiKey(app, orgId);
 
         const providerNames = getAllProviderNames();
         const providerConfigs = providerNames.map(providerName => {
@@ -71,20 +73,25 @@ export class AppsService {
         });
     }
 
-    async generateApiKey(app: App): Promise<AppApiKey> {
+    async generateApiKey(app: App, orgId: string): Promise<AppApiKey> {
         if (app.apiKey) {
             app.apiKey.active = false;
             await this.apiKeyRepo.save(app.apiKey);
         }
 
-        const key = `tab_${randomBytes(24).toString("hex")}`;
-        const apiKey = this.apiKeyRepo.create({ app, key, active: true });
+        const key = this.generateKeyString(app.id, orgId);
 
-        await this.apiKeyRepo.save(apiKey);
+        let apiKey = this.apiKeyRepo.create({
+            app,
+            key,
+            active: true
+        });
+
+        apiKey = await this.apiKeyRepo.save(apiKey);
 
         await this.auditRepo.save(
             this.auditRepo.create({
-                organizationId: app.organization.id,
+                organizationId: orgId,
                 userId: undefined,
                 action: AuditAction.API_KEY_ROTATED,
                 metadata: { appId: app.id, keyId: apiKey.id },
@@ -93,8 +100,18 @@ export class AppsService {
 
         app.apiKey = apiKey;
         await this.appRepo.save(app);
-
+        
         return apiKey;
+    }
+
+    generateKeyString(appId: string, orgId: string): string {
+        const prefix = "tab";
+        const randomPart = randomBytes(24).toString("hex");
+        const checksum = createHmac("sha256", ENV.JWT.API_KEY_SECRET!)
+            .update(`${appId}:${orgId}:${randomPart}`)
+            .digest("hex")
+            .substring(0, 8);
+        return `${prefix}_${orgId.slice(0, 6)}_${randomPart}_${checksum}`;
     }
 
     async revokeApiKey(appId: string, organizationId: string): Promise<void> {
