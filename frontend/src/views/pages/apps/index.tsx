@@ -31,11 +31,6 @@ const AppCard = ({ app, onRotate, rotating, onCopy }: { app: any; onRotate: (id:
                                 <button className="btn btn-xs btn-outline-secondary" onClick={() => onCopy(app.apiKey.key)}>Copy</button>
                             </div>
                         )}
-                        {/* {app.webhookUrl && (
-                            <div className="small text-muted mb-2 text-truncate" title={app.webhookUrl}>
-                                Webhook: {app.webhookUrl}
-                            </div>
-                        )} */}
                         <div className="d-flex gap-2">
                             <Link
                                 to={`/apps/${app.id}/providers`}
@@ -80,10 +75,6 @@ const CreateAppModal = ({ show, onClose, onCreate }: { show: boolean; onClose: (
                             <label className="form-label">Description</label>
                             <textarea className="form-control" rows={3} value={description} onChange={(e) => setDescription(e.target.value)} />
                         </div>
-                        {/* <div className="mb-3">
-                            <label className="form-label">Webhook URL</label>
-                            <input className="form-control" value={webhookUrl} onChange={(e) => setWebhookUrl(e.target.value)} />
-                        </div> */}
                         <div className="mb-3">
                             <label className="form-label">Environment</label>
                             <select className="form-select" value={environment} onChange={(e) => setEnvironment(e.target.value as AppEnvironment)}>
@@ -112,11 +103,29 @@ export const AppsPage = () => {
 
     const handleCopy = async (value: string) => {
         try {
-            await navigator.clipboard.writeText(value);
-            setCopied(value);
-            setTimeout(() => setCopied(null), 1500);
-        } catch (_) {
-            // eslint-disable-next-line no-alert
+            const textArea = document.createElement('textarea');
+            textArea.value = value;
+
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+
+            document.body.appendChild(textArea);
+
+            textArea.focus();
+            textArea.select();
+
+            const successful = document.execCommand('copy');
+
+            document.body.removeChild(textArea);
+
+            if (successful) {
+                setCopied(value);
+                setTimeout(() => setCopied(null), 1500);
+            } else {
+                alert('Failed to copy');
+            }
+        } catch (error) {
             alert('Failed to copy');
         }
     };
