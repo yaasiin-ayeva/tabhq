@@ -9,7 +9,8 @@ import inviteRoutes from "./auth/invite.controller";
 import providerConfigRoutes from "./payment-config/provider-config.controller";
 import paymentRoutes from "./payments/payments.controller";
 import webhooks from "./webhooks/index.webhook";
-import logger from "./common/logger";
+import apiErrorHandlerMiddleware from "./common/middlewares/api-error-handler.middleware";
+import morgan from "./common/morgan";
 
 const app = express();
 
@@ -22,6 +23,12 @@ app.use(cors(
         credentials: true,
     }
 ));
+
+app.use(apiErrorHandlerMiddleware);
+
+app.use(morgan.successHandler);
+app.use(morgan.errorHandler);
+
 app.use(bodyParser.json());
 
 app.use("/auth", authRoutes);
@@ -30,21 +37,5 @@ app.use("/apps", appRoutes);
 app.use("/payment-config", providerConfigRoutes);
 app.use("/payments", paymentRoutes);
 app.use("/webhooks", webhooks);
-
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-    logger.error("Request failed", {
-        message: err.message,
-        stack: err.stack,
-        method: req.method,
-        url: req.originalUrl,
-        body: req.body,
-        params: req.params,
-        query: req.query,
-    });
-
-    res.status(err.status || 500).json({
-        error: err.message || "Internal Server Error",
-    });
-});
 
 export default app;
