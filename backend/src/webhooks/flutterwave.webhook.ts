@@ -18,7 +18,7 @@ router.post("/", async (req: Request, res: Response) => {
     console.log("FLUTTERWAVE WEBHOOK RECEIVED WITH THESE PAYLOADS");
     console.log(`Events ${event}`);
     console.log("FLUTTERWAVE WEBHOOK RECEIVED FROM FLUTTERWAVE");
-    
+
     if (!event?.data) {
         return res.status(400).json({ message: "Invalid payload" });
     }
